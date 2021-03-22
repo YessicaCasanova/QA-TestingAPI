@@ -1,0 +1,430 @@
+{
+	"info": {
+		"_postman_id": "2c9d807b-95d1-4d4b-87b4-dc2d36ad07b1",
+		"name": "ExerciceSession2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create",
+			"item": [
+				{
+					"name": "Create Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var name = pm.environment.get(\"TaskName\");\r",
+									"\r",
+									"pm.test(\"Test content\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.environment.set(\"IdTask\", jsonData.id);\r",
+									"    pm.expect(jsonData.content).to.eql(name);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is json\", function () {\r",
+									"    var content = pm.response.contentInfo(\"Content-Type\");\r",
+									"    pm.expect(content.mimeFormat).to.eql(\"json\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Negative cases\r",
+									"\r",
+									"pm.test(\"Content-Type is json\", function () {\r",
+									"    var content = pm.response.contentInfo(\"Content-Type\");\r",
+									"    pm.expect(content.mimeFormat).to.eql(\"text\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test priority\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.priority).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-id",
+								"value": "$(uuidgen)",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"{{TaskName}}\", \r\n    \"due_string\": \"{{date}}\", \r\n    \"due_lang\": \"{{lang}}\", \r\n    \"priority\": {{priority}}\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}",
+							"host": [
+								"{{URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var name = pm.variables.get(\"TaskNameFile\");\r",
+									"\r",
+									"pm.test(\"Test content\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.content).to.eql(name);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is json\", function () {\r",
+									"    var content = pm.response.contentInfo(\"Content-Type\");\r",
+									"    pm.expect(content.mimeFormat).to.eql(\"json\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-id",
+								"value": "$(uuidgen)",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"{{TaskNameFile}}\", \r\n    \"due_string\": \"{{dateFile}}\", \r\n    \"due_lang\": \"{{langFile}}\", \r\n    \"priority\": {{priorityFile}}\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}",
+							"host": [
+								"{{URL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get",
+			"item": [
+				{
+					"name": "Get Active Tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test content\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is json\", function () {\r",
+									"    var content = pm.response.contentInfo(\"Content-Type\");\r",
+									"    pm.expect(content.mimeFormat).to.eql(\"json\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Negative case\r",
+									"\r",
+									"pm.test(\"Content-Type is text\", function () {\r",
+									"    var content = pm.response.contentInfo(\"Content-Type\");\r",
+									"    pm.expect(content.mimeFormat).to.eql(\"text\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}",
+							"host": [
+								"{{URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get an active task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Content-Type is json\", function () {\r",
+									"    var content = pm.response.contentInfo(\"Content-Type\");\r",
+									"    pm.expect(content.mimeFormat).to.eql(\"json\");\r",
+									"});\r",
+									"\r",
+									"var id = pm.environment.get(\"IdTask\");\r",
+									"pm.test(\"Test content\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(id);\r",
+									"});\r",
+									"\r",
+									"// Negative case\r",
+									"\r",
+									"pm.test(\"Content-Type is text\", function () {\r",
+									"    var content = pm.response.contentInfo(\"Content-Type\");\r",
+									"    pm.expect(content.mimeFormat).to.eql(\"text\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/{{IdTask}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"{{IdTask}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update",
+			"item": [
+				{
+					"name": "Update a task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response doesn't have Content-Type\", function () {\r",
+									"       pm.expect(pm.response.headers.get(\"Content-Type\")).not.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The task was not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-Id",
+								"value": "$(uuidgen)",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"priority\": 3\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/{{IdTask}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"{{IdTask}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change a task status to \"Complete\"",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response doesn't have Content-Type\", function () {\r",
+									"       pm.expect(pm.response.headers.get(\"Content-Type\")).not.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The task was not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/{{IdTask}}/close",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"{{IdTask}}",
+								"close"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reopen a task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response doesn't have Content-Type\", function () {\r",
+									"       pm.expect(pm.response.headers.get(\"Content-Type\")).not.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The task was not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/{{IdTask}}/reopen",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"{{IdTask}}",
+								"reopen"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete",
+			"item": [
+				{
+					"name": "Delete a task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response doesn't have Content-Type\", function () {\r",
+									"       pm.expect(pm.response.headers.get(\"Content-Type\")).not.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The task was not found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/{{IdTask}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"{{IdTask}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "610ccb458e489145b4c59ae2c7f35881801b5a09",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 2xx\", function () {",
+					"    pm.response.to.be.success;",
+					"});",
+					"",
+					"pm.test(\"Response time is less than 500ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(500);",
+					"});"
+				]
+			}
+		}
+	]
+}
